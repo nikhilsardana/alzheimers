@@ -1,6 +1,3 @@
-[submodule "resnet_data/zoo"]
-	path = resnet_data/zoo
-	url = https://github.com/Cadene/tensorflow-model-zoo.torch.git
 [submodule "resnet/zoo"]
 	path = resnet/zoo
 	url = https://github.com/Cadene/pretrained-models.pytorch.git
