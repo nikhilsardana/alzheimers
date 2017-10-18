@@ -1,3 +1,0 @@
-[submodule "inceptionresnetv2"]
-	path = inceptionresnetv2
-	url = https://github.com/Cadene/tensorflow-model-zoo.torch.git
