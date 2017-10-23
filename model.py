@@ -1,25 +1,25 @@
+import torch
 import torch.nn as nn
 import os
 import argparse
-import torch
 import numpy as np
 import PIL as Image
 from scipy.misc import imresize
 import torch.utils.data as data
-import torchvision 
-import transforms
+import torchvision
+from torchvision import datasets, transforms
+from torch.autograd import Variable
+import time
+import torch.optim as optim
+from torch.optim import lr_scheduler
 import meter
 
-from resnet.inceptionresnetv2 import InceptionResNetV2
+from resnet.pretrainedmodels.inceptionresnetv2 import *
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--load_weights", default='imagenet', type=str)
-parser.add_argument("-img_dir", default="../imgdata/train/", type=str)
-args = parser.parse_args()
 
-model = InceptionResNetV2(pretrained=True)
+model = inceptionresnetv2(num_classes=1000,pretrained='imagenet')
 num_ftrs = model.classif.in_features
-model.classif = nn.Linear(num_fts, 5)
+model.classif = nn.Linear(num_ftrs, 5)
 
 
 ######################################
@@ -29,14 +29,14 @@ model.classif = nn.Linear(num_fts, 5)
 
 data_transforms = {
     'train': transforms.Compose([
-            Scale(299)
-            ToTensor()
-            normalize([0.122,0.122,0.122], [0.250,0.250,0.250])
-    ])
+            transforms.Scale(299),
+            transforms.ToTensor(),
+            transforms.Normalize([0.122,0.122,0.122], [0.250,0.250,0.250])
+    ]),
     'test': transforms.Compose([
-            Scale(299)
-            ToTensor()
-            normalize([0.122,0.122,0.122], [0.250,0.250,0.250])
+            transforms.Scale(299),
+            transforms.ToTensor(),
+            transforms.Normalize([0.122,0.122,0.122], [0.250,0.250,0.250])
     ])
 }
 
@@ -108,7 +108,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
                 if phase == 'test':
                     confusion_matrix.add(outputs.data.squeeze())
-                    print confusion_matrix.conf
+                    print(confusion_matrix.conf)
 
                 _, preds = torch.max(outputs.data, 1)
                 loss = criterion(outputs, labels)
