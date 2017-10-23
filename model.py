@@ -12,19 +12,9 @@ import meter
 
 from resnet.inceptionresnetv2 import InceptionResNetV2
 
-f = InceptionResNetV2.forward
-
-def forward(self, x):
-    x = f(self, x)
-    x = self.act(x)
-    x = self.last(x)
-    return x
-
-InceptionResNetV2.foward = forward
-
 parser = argparse.ArgumentParser()
-parser.add_argument("--load_weights", default=None, type=str)
-parser.add_argument("-img_dir", default="imgdata/train/", type=str)
+parser.add_argument("--load_weights", default='imagenet', type=str)
+parser.add_argument("-img_dir", default="../imgdata/train/", type=str)
 args = parser.parse_args()
 
 model = InceptionResNetV2(pretrained=True)
@@ -36,21 +26,17 @@ model.classif = nn.Linear(num_fts, 5)
 ## Custom data transforms
 #####################################
 
-class Scale(object):
-    def __call__(self, sample):
-        x = imresize(sample['image'], (299,299))
-        return {'image':x, 'labels': sample['labels']}
 
 data_transforms = {
     'train': transforms.Compose([
-            Scale()
-            transforms.toTensor()
-            #normalize(mean, std)
+            Scale(299)
+            ToTensor()
+            normalize([0.122,0.122,0.122], [0.250,0.250,0.250])
     ])
     'test': transforms.Compose([
-            Scale()
-            transforms.toTensor()
-            #normalize(mean, std)
+            Scale(299)
+            ToTensor()
+            normalize([0.122,0.122,0.122], [0.250,0.250,0.250])
     ])
 }
 
@@ -59,7 +45,7 @@ data_transforms = {
 ## Load Data
 #####################################
 
-data_dir = 'imgdata'
+data_dir = '../imgdata'
 image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
                     data_transforms[x]) for x in ['train', 'test']}
 dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
