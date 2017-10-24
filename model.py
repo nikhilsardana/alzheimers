@@ -12,8 +12,9 @@ from torch.autograd import Variable
 import time
 import torch.optim as optim
 from torch.optim import lr_scheduler
-import meter
-
+import confusionmeter
+import sys
+import shutil
 from resnet.pretrainedmodels.inceptionresnetv2 import *
 
 
@@ -48,8 +49,8 @@ data_transforms = {
 data_dir = '../imgdata'
 image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
                     data_transforms[x]) for x in ['train', 'test']}
-dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
-                    shuffle=True, num_workers=4) for x in ['train', 'test']}
+dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=128,
+                    shuffle=True, num_workers=16) for x in ['train', 'test']}
 dataset_sizes= {x: len(image_datasets[x]) for x in ['train', 'test']}
 classnames = image_datasets['train'].classes
 
@@ -76,7 +77,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
-        confusion_matrix = meter.ConfusionMeter(5) #I have 5 classes here
         # Each epoch has a training and validation phase
         for phase in ['train', 'test']:
             if phase == 'train':
@@ -87,9 +87,10 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
             running_loss = 0.0
             running_corrects = 0
-
+            i=0
             # Iterate over data.
             for data in dataloaders[phase]:
+                i+=1
                 # get the inputs
                 inputs, labels = data
 
@@ -106,12 +107,10 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                 # forward
                 outputs = model(inputs)
 
-                if phase == 'test':
-                    confusion_matrix.add(outputs.data.squeeze())
-                    print(confusion_matrix.conf)
 
                 _, preds = torch.max(outputs.data, 1)
                 loss = criterion(outputs, labels)
+
 
                 # backward + optimize only if in training phase
                 if phase == 'train':
@@ -122,6 +121,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                 running_loss += loss.data[0]
                 running_corrects += torch.sum(preds == labels.data)
 
+                if i%10==0:
+                    print(epoch, running_corrects/(i*128.0))
+
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects / dataset_sizes[phase]
 
@@ -131,8 +133,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             # deep copy the model
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
-                best_model_wts = model.state_dict()
-
+                model.save_state_dict("mymodel.pt")
         print()
 
     time_elapsed = time.time() - since
@@ -144,12 +145,11 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     model.load_state_dict(best_model_wts)
     return model
 
-if args.load_weights:
-    print("Loaded weights from {}".format(args.load_weights))
-    in_res.load_weights(args.load_weights)
-
 
 opt = optim.SGD(model.parameters(), lr=0.001, momentum=0.5)
 criterion = nn.CrossEntropyLoss()
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
-model = train_model(model, criterion, optimizer_ft, exp_lr_scheduler, num_epochs=5)
+exp_lr_scheduler = lr_scheduler.StepLR(opt, step_size=7, gamma=0.1)
+model = train_model(model, criterion, opt, exp_lr_scheduler, num_epochs=5)
+model.save_state_dict('finalmodel.pt')
+
+#end

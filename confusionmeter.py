@@ -1,4 +1,4 @@
-from . import meter
+import meter
 import numpy as np
 
 
