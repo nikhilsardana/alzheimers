@@ -6,7 +6,7 @@ Read the paper [here](https://nikhilsardana.github.io/sts.pdf).
 This work began in June 2017 as my project at the [Communications Engineering Branch](https://ceb.nlm.nih.gov/) of the [National Institutes of Health](https://www.nih.gov/). I finished this work in November 2017, a few months after I left the NIH at the end of Summer 2017.
 
 ## Overview
-Using convolutional networks to classify subjects into five caregories of cognitive impairment, solely from [rs-fMRI](https://en.wikipedia.org/wiki/Resting_state_fMRI) data. The classes are listed below in order of increasing cognitive impairment:
+Using convolutional networks to classify subjects into five categories of cognitive impairment, solely from [rs-fMRI](https://en.wikipedia.org/wiki/Resting_state_fMRI) data. The classes are listed below in order of increasing cognitive impairment:
 - No cognitive impairment (Normal)
 - Significant memory concern (SMC)
 - Early Mild Cognitive Impairment (EMCI)
