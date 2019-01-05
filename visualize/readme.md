@@ -4,6 +4,6 @@ This gives us the added benefit of determining which areas of the brain the CNN 
 
 This folder lists a few scripts used for partial occlusion through Picasso.
 
-A sample output from Picasso on a 2d slice.
+Below is a sample output from Picasso on a 2d slice.
 
 ![Sample picasso output](sampleoutput.png)
