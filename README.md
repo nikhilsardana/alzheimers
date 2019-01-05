@@ -17,7 +17,7 @@ All data used in this project is from the [Alzheimer's Disease Neuroimaging Init
 
 This work uses a standard [Inception-ResNet-v2](https://arxiv.org/abs/1602.07261) model for classification.
 
-This work is fairly straightforward, but took more time than initially allocated due to the sheer size of the ADNI dataset. The three main tasks were:
+This project was fairly straightforward, but took more time than initially allocated due to the sheer size of the ADNI dataset. The three main tasks were:
 - Preprocessing and sanitizing the fMRI data
 - Training and testing the CNN
 - Visualizing CNN results using [Picasso](https://github.com/merantix/picasso) and calculating classification metrics.
