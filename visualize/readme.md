@@ -3,3 +3,7 @@ To evaluate the robustness of the CNN trained on the MRI data, I used the [Picas
 This gives us the added benefit of determining which areas of the brain the CNN deems essential for classifying Alzheimer's brains.
 
 This folder lists a few scripts used for partial occlusion through Picasso.
+
+A sample output from Picasso on a 2d slice.
+
+![Sample picasso output](sampleoutput.png)
