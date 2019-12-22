@@ -22,5 +22,5 @@ This project was fairly straightforward, but took more time than initially alloc
 - Training and testing the CNN
 - Visualizing CNN results using [Picasso](https://github.com/merantix/picasso) and calculating classification metrics.
 
-See the `[scripts/](https://github.com/nikhilsardana/alzheimers/tree/master/scripts)` folder for preprocessing and sanitization scripts, the `[visualize/](https://github.com/nikhilsardana/alzheimers/tree/master/visualize)` folder for scripts to help with Picasso visualization, and the `[results/](https://github.com/nikhilsardana/alzheimers/tree/master/results)` folder for a few classification metric scripts.
+See the [`scripts/`](https://github.com/nikhilsardana/alzheimers/tree/master/scripts) folder for preprocessing and sanitization scripts, the [`visualize/`](https://github.com/nikhilsardana/alzheimers/tree/master/visualize) folder for scripts to help with Picasso visualization, and the [`results/`](https://github.com/nikhilsardana/alzheimers/tree/master/results) folder for a few classification metric scripts.
 
